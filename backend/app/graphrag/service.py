@@ -11,7 +11,9 @@ backed by a real query result; nothing here invents a relationship
 
 import logging
 import uuid
+from collections.abc import Mapping
 from dataclasses import dataclass
+from typing import Literal
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -62,7 +64,7 @@ _MAX_CURATED_INSIGHTS = 6
 class _ConceptScore:
     mastery: float | None
     confidence: float | None
-    status: str
+    status: Literal["strong", "developing", "weak", "unknown"]
     evidence_count: int
 
 
@@ -81,6 +83,7 @@ def _score_concept(evidence: list[SkillEvidence]) -> _ConceptScore:
     mastery = round(raw_score * trust_factor + _CONCEPT_NEUTRAL_PRIOR * (1 - trust_factor), 4)
     confidence = round(raw_confidence * volume_factor * diversity_factor, 4)
 
+    status: Literal["strong", "developing", "weak", "unknown"]
     if mastery >= _STRONG_THRESHOLD:
         status = "strong"
     elif mastery <= _WEAK_THRESHOLD:
@@ -125,7 +128,7 @@ def _build_concept_insight(
     repo: GraphRepository | None,
     student_profile: StudentProfile,
     node: ConceptNodeOut,
-    status_by_slug: dict[str, str],
+    status_by_slug: Mapping[str, str],
 ) -> ConceptInsightOut:
     try:
         if repo is not None:
@@ -259,7 +262,7 @@ def _compute_graph_structure(db: Session, student_profile: StudentProfile) -> _G
     ).all()
     evidence_by_concept_id: dict[uuid.UUID, list[SkillEvidence]] = {}
     for e in evidence_rows:
-        evidence_by_concept_id.setdefault(e.concept_id, []).append(e)
+        evidence_by_concept_id.setdefault(e.concept_id, []).append(e)  # type: ignore[arg-type]
 
     depths = _compute_depths(edge_rows)
 

@@ -21,6 +21,7 @@ import html
 import logging
 import re
 from datetime import datetime, timezone
+from typing import Any
 
 import httpx
 from sqlalchemy import select
@@ -84,19 +85,19 @@ _ENG_TITLE_RE = re.compile(
     r"programmer|data scientist|machine learning|ml engineer|research engineer|"
     r"full[\s-]?stack|front[\s-]?end|back[\s-]?end|devops|site reliability|sre|"
     r"intern(?:ship)?|co-?op|apprentice|graduate trainee)\b",
-    re.I,
+    re.IGNORECASE,
 )
 
 _INTERN_RE = re.compile(
     r"\b(intern(?:ship)?|co-?op|apprentice(?:ship)?|trainee|working student|summer 20\d\d)\b",
-    re.I,
+    re.IGNORECASE,
 )
 # titles that contain an eng-ish word but are not what a CS student prepares for
 _NON_ENG_RE = re.compile(
     r"\b(account executive|solutions? (architect|engineer|consultant)|sales|"
     r"recruit|marketing|counsel|partnerships?|customer success|support engineer|"
     r"technical writer|program manager|product manager|designer|analyst relations)\b",
-    re.I,
+    re.IGNORECASE,
 )
 
 # canonical skill -> keyword patterns (word-boundary, case-insensitive)
@@ -153,7 +154,7 @@ def _last_good_key(source: str, token: str) -> str:
     return f"live_jobs:last_good:{source}:{token}"
 
 
-def _read_cache(key: str) -> list[dict] | None:
+def _read_cache(key: str) -> Any:
     try:
         raw = get_redis().get(key)
     except Exception:
@@ -163,7 +164,7 @@ def _read_cache(key: str) -> list[dict] | None:
     try:
         import json
 
-        return json.loads(raw)
+        return json.loads(raw)  # type: ignore[no-any-return]
     except Exception:
         return None
 
@@ -179,7 +180,7 @@ def _write_cache(key: str, jobs: list[dict], ttl: int) -> None:
 
 def _strip_html(raw: str) -> str:
     text = html.unescape(raw or "")
-    text = re.sub(r"<(li|p|br|/tr|/h[1-6])[^>]*>", "\n", text, flags=re.I)
+    text = re.sub(r"<(li|p|br|/tr|/h[1-6])[^>]*>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n\s*\n+", "\n\n", text)
@@ -269,7 +270,7 @@ def _sections(text: str) -> dict[str, list[str]]:
         r"^\s*(what you'?ll do|responsibilities|what you will do|the role|"
         r"what we'?re looking for|requirements|qualifications|you have|about you|"
         r"nice to have|bonus points|preferred)\s*:?\s*$",
-        re.I,
+        re.IGNORECASE,
     )
     sections: dict[str, list[str]] = {}
     current = "body"
@@ -314,9 +315,7 @@ def _extract_skills(text: str) -> list[LiveJobSkillOut]:
             continue
         if in_nice and hits == 1:
             importance = "familiar"
-        elif hits >= 3 or any(mk in lower[: lower.find(pat) + 200] for pat in patterns for mk in _MUST_MARKERS):
-            importance = "core"
-        elif hits >= 2:
+        elif hits >= 3 or any(mk in lower[: lower.find(pat) + 200] for pat in patterns for mk in _MUST_MARKERS) or hits >= 2:
             importance = "core"
         else:
             importance = "strong"
@@ -337,7 +336,7 @@ def _normalise(source: str, token: str, company: str, sector: str, raw: dict) ->
         company=company,
         title=raw["title"],
         location=loc,
-        remote=bool(re.search(r"remote", loc, re.I)),
+        remote=bool(re.search(r"remote", loc, re.IGNORECASE)),
         url=raw.get("url") or "",
         sector=sector,
         source=source,
@@ -361,7 +360,7 @@ _COMP_RE = re.compile(
 
 def _comp_note(text: str) -> str | None:
     for line in text.splitlines():
-        if re.search(r"compensation|salary|base pay|pay range|total comp", line, re.I):
+        if re.search(r"compensation|salary|base pay|pay range|total comp", line, re.IGNORECASE):
             m = _COMP_RE.search(line)
             if m:
                 return line.strip()[:180]
@@ -418,7 +417,8 @@ def _all_jobs(db: Session) -> tuple[list[LiveJobOut], bool]:
         for raw in raws:
             try:
                 jobs.append(_normalise(source, token, company, sector, raw))
-            except Exception:
+            except Exception as exc:
+                logger.debug("Skipping unparseable job posting: %s", exc)
                 continue
 
     # Always blend in the curated catalog so Indian openings show up alongside
@@ -445,8 +445,8 @@ def _all_jobs(db: Session) -> tuple[list[LiveJobOut], bool]:
             json.dumps({"jobs": [j.model_dump() for j in jobs], "live": live}),
             ex=_FEED_TTL,
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.debug("Could not cache live jobs feed: %s", exc)
     return jobs, live
 
 
@@ -479,7 +479,7 @@ def get_job(db: Session, job_id: str) -> LiveJobOut | None:
     return next((j for j in jobs if j.id == job_id), None)
 
 
-_PKG_IN_NOTE_RE = re.compile(r"\$\s*([\d,]{4,})|([\d.]+)\s*LPA", re.I)
+_PKG_IN_NOTE_RE = re.compile(r"\$\s*([\d,]{4,})|([\d.]+)\s*LPA", re.IGNORECASE)
 
 
 def _note_lpa(note: str | None) -> float:

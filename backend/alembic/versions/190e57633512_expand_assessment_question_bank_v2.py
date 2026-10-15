@@ -12,17 +12,17 @@ Create Date: 2026-08-06 02:17:40.483575
 """
 import sys
 import uuid
+from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Sequence, Union
 
 import sqlalchemy as sa
-from alembic import op
 
+from alembic import op
 from app.core.types import GUID, JSONBType
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from app.seed.assessment_taxonomy import (  # noqa: E402
+from app.seed.assessment_taxonomy import (
     EXTRA_QUESTIONS_EXISTING,
     NEW_CONCEPT_DEPENDENCIES,
     NEW_CONCEPTS,
@@ -33,9 +33,9 @@ from app.seed.assessment_taxonomy import (  # noqa: E402
 
 # revision identifiers, used by Alembic.
 revision: str = '190e57633512'
-down_revision: Union[str, Sequence[str], None] = 'a3f1c9e6b2d4'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = 'a3f1c9e6b2d4'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 _NEW_DOMAIN_SLUGS = [d["slug"] for d in NEW_DOMAINS]
 _NEW_SKILL_NAMES = [s["name"] for s in NEW_SKILLS]

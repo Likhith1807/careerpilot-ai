@@ -45,12 +45,14 @@ exclude = ["alembic*", "tests*"]
 line-length = 100
 
 [tool.ruff.lint]
+select = ["E", "F", "W", "I"]
 # B008: FastAPI's `Depends(...)` in argument defaults is the documented,
 # idiomatic pattern for dependency injection -- not a real bug here.
 # BLE001: intentional broad `except Exception` at two boundaries (file
 # parsing libraries raise inconsistent error types; the top-level unhandled-
 # error handler must catch everything) is deliberate, not sloppy.
-ignore = ["B008", "BLE001"]
+# E501: Line length formatting is handled gracefully without breaking long documentation strings.
+ignore = ["B008", "BLE001", "E501"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

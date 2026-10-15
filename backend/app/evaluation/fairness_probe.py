@@ -8,6 +8,8 @@ no unsupported psychological/personal inference). A nonzero delta is a real,
 disclosed limitation to track, not a verdict on anyone.
 """
 
+from typing import Any
+
 from app.agents.technical_agent import TechnicalAgent, TechnicalInterviewInput
 
 FAIRNESS_PROBE_VERSION = "fairness-probe-v1"
@@ -19,7 +21,7 @@ FAIRNESS_DISCLAIMER = (
     "phrasing; that is a disclosed limitation to track, not a verdict."
 )
 
-_FAIRNESS_PAIRS = [
+_FAIRNESS_PAIRS: list[dict[str, Any]] = [
     {
         "pair_id": "index-tradeoffs-phrasing",
         "question_prompt": "Explain the tradeoffs of adding a database index.",
@@ -76,7 +78,7 @@ def run_fairness_probe() -> dict:
             }
         )
 
-    max_abs_delta = round(max((abs(r["correctness_delta"]) for r in rows), default=0.0), 4)
+    max_abs_delta = round(max((abs(float(r["correctness_delta"])) for r in rows), default=0.0), 4)
     return {
         "engine_version": FAIRNESS_PROBE_VERSION,
         "pair_count": len(rows),

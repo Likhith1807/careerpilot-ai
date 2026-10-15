@@ -1338,8 +1338,8 @@ def build_round_summary(session: InterviewSession) -> dict:
     ]
     scored_tiers = [b for b in difficulty_breakdown if b["average_score"] is not None]
     if len(scored_tiers) >= 2:
-        best = max(scored_tiers, key=lambda b: b["average_score"])
-        worst = min(scored_tiers, key=lambda b: b["average_score"])
+        best = max(scored_tiers, key=lambda b: float(b["average_score"]))  # type: ignore[arg-type]
+        worst = min(scored_tiers, key=lambda b: float(b["average_score"]))  # type: ignore[arg-type]
         if best["difficulty"] != worst["difficulty"]:
             narrative_parts.append(
                 f"Strongest on {best['difficulty']} questions ({best['average_score']:.0%}), "

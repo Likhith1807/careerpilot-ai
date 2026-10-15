@@ -8,7 +8,40 @@ import uuid
 
 import pytest
 
+import app.core.rate_limit as rate_limit_module
 from app.core.rate_limit import RateLimitedError, RateLimiter
+
+
+class _FakeRedis:
+    def __init__(self) -> None:
+        self._counts: dict[str, int] = {}
+        self._ttls: dict[str, int] = {}
+
+    def incr(self, key: str) -> int:
+        self._counts[key] = self._counts.get(key, 0) + 1
+        return self._counts[key]
+
+    def expire(self, key: str, seconds: int) -> bool:
+        self._ttls[key] = seconds
+        return True
+
+    def ttl(self, key: str) -> int:
+        return self._ttls.get(key, 5)
+
+    def ping(self) -> bool:
+        return True
+
+
+@pytest.fixture(autouse=True)
+def _ensure_redis_available(monkeypatch):
+    """If live Redis is not reachable, monkeypatch get_redis with in-memory Redis."""
+    try:
+        from app.core.redis_client import get_redis
+        client = get_redis()
+        client.ping()
+    except Exception:
+        fake_redis = _FakeRedis()
+        monkeypatch.setattr(rate_limit_module, "get_redis", lambda: fake_redis)
 
 
 class _FakeClient:
@@ -28,6 +61,7 @@ def test_rate_limiter_blocks_after_threshold():
         limiter(request)  # under the limit -- must not raise
     with pytest.raises(RateLimitedError):
         limiter(request)
+
 
 
 def test_rate_limiter_is_isolated_per_client_ip():

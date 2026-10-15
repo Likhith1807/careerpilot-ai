@@ -42,8 +42,8 @@ def run_fallback_fidelity_check() -> dict:
             "methodology_note": _METHODOLOGY_NOTE,
         }
 
-    from app.ai.providers.anthropic_provider import AnthropicChatProvider
     from app.agents.resume_intelligence_agent import _deterministic_resume_insight
+    from app.ai.providers.anthropic_provider import AnthropicChatProvider
 
     fake = FakeChatProvider()
     live = AnthropicChatProvider(api_key=settings.primary_llm_api_key, model=settings.primary_llm_model)

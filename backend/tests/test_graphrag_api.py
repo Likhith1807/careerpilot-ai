@@ -75,7 +75,7 @@ def test_embedded_practice_flow_never_touches_assessment_endpoints_and_updates_t
         )
         assert answer.status_code == 200
         progress = answer.json()
-        assert "explanation" in progress and progress["explanation"]  # immediate learning payoff
+        assert progress.get("explanation")  # immediate learning payoff
         is_complete = progress["is_complete"]
         question = progress["next_question"]
 

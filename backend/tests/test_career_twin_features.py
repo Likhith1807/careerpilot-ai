@@ -165,7 +165,7 @@ class TestTimeToTargetProjection:
         db_session.commit()
 
         _add_evidence(db_session, profile, "Python", EVIDENCE_TYPE_ASSESSMENT, "assessment_attempt", score=0.6, weight=0.6, confidence=0.6)
-        second = recompute_twin(db_session, profile, reason="improved")
+        recompute_twin(db_session, profile, reason="improved")
 
         projections = project_time_to_target(db_session, profile.id)
         technical = next(p for p in projections if p.component_type == COMPONENT_TECHNICAL)

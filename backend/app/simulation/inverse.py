@@ -17,6 +17,7 @@ import math
 import uuid
 from dataclasses import dataclass, field
 from datetime import date, timedelta
+from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -315,7 +316,7 @@ def build_calendar_plan(
     total_hours = sum(item.hours for item in plan)
     weeks_needed = math.ceil(total_hours / weekly_hours) if total_hours > 0 else 0
 
-    remaining = [{"skill_name": i.skill_name, "activity_type": i.activity_type, "hours": i.hours} for i in plan]
+    remaining: list[dict[str, Any]] = [{"skill_name": i.skill_name, "activity_type": i.activity_type, "hours": float(i.hours)} for i in plan]
     weeks: list[CalendarWeek] = []
     week_number = 1
     while remaining:
@@ -323,12 +324,14 @@ def build_calendar_plan(
         budget_left = weekly_hours
         while remaining and budget_left > 0:
             item = remaining[0]
-            take = min(item["hours"], budget_left)
+            item_hours = float(item["hours"])
+            take = min(item_hours, budget_left)
             week.items.append({"skill_name": item["skill_name"], "activity_type": item["activity_type"], "hours": round(take, 2)})
             week.total_hours = round(week.total_hours + take, 2)
             budget_left -= take
-            item["hours"] -= take
-            if item["hours"] <= 1e-9:
+            remaining_hours = item_hours - take
+            item["hours"] = remaining_hours
+            if remaining_hours <= 1e-9:
                 remaining.pop(0)
         weeks.append(week)
         week_number += 1

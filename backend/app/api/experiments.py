@@ -9,7 +9,11 @@ from app.core.errors import NotFoundError, UnprocessableError
 from app.models.experiment import ACTIVITY_TYPES, ExperimentScenario
 from app.models.student import StudentProfile
 from app.schemas.experiment import (
+    AllocationPlanItemOut,
+    CalendarPlanOut,
+    CalendarWeekOut,
     ExperimentScenarioOut,
+    MarginalGainPointOut,
     PredictionAccuracyOut,
     StartExperimentRequest,
     TargetPlanOut,
@@ -104,33 +108,42 @@ def plan_target(
         baseline_score=solve.baseline_score,
         reached_target=solve.reached_target,
         plan=[
-            {
-                "skill_name": p.skill_name,
-                "activity_type": p.activity_type,
-                "hours": p.hours,
-                "order_rank": p.order_rank,
-                "scheduling_reason": p.scheduling_reason,
-            }
+            AllocationPlanItemOut(
+                skill_name=p.skill_name,
+                activity_type=p.activity_type,
+                hours=p.hours,
+                order_rank=p.order_rank,
+                scheduling_reason=p.scheduling_reason,
+            )
             for p in solve.plan
         ],
         total_hours=solve.total_hours,
         weeks_to_complete=solve.weeks_to_complete,
         assumptions=solve.assumptions,
         disclaimer=solve.disclaimer,
-        calendar={
-            "weeks": [
-                {"week_number": w.week_number, "start_date": w.start_date, "items": w.items, "total_hours": w.total_hours}
+        calendar=CalendarPlanOut(
+            weeks=[
+                CalendarWeekOut(
+                    week_number=w.week_number,
+                    start_date=w.start_date,
+                    items=w.items,
+                    total_hours=w.total_hours,
+                )
                 for w in result.calendar.weeks
             ],
-            "weekly_hours_budget": result.calendar.weekly_hours_budget,
-            "total_hours": result.calendar.total_hours,
-            "weeks_needed": result.calendar.weeks_needed,
-            "deadline": result.calendar.deadline,
-            "fits_deadline": result.calendar.fits_deadline,
-            "feasibility_note": result.calendar.feasibility_note,
-        },
+            weekly_hours_budget=result.calendar.weekly_hours_budget,
+            total_hours=result.calendar.total_hours,
+            weeks_needed=result.calendar.weeks_needed,
+            deadline=result.calendar.deadline,
+            fits_deadline=result.calendar.fits_deadline,
+            feasibility_note=result.calendar.feasibility_note,
+        ),
         marginal_gain_curve=[
-            {"hours": p.hours, "marginal_gain": p.marginal_gain, "cumulative_gain": p.cumulative_gain}
+            MarginalGainPointOut(
+                hours=p.hours,
+                marginal_gain=p.marginal_gain,
+                cumulative_gain=p.cumulative_gain,
+            )
             for p in result.marginal_gain_curve
         ],
     )

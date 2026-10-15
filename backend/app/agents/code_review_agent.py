@@ -12,6 +12,8 @@ import json
 import re
 from typing import ClassVar
 
+from pydantic import Field
+
 from app.agents.base import Agent, AgentInput, AgentOutput
 from app.ai.registry import get_chat_provider
 from app.ai.schemas import ChatMessage, StructuredChatRequest
@@ -114,7 +116,7 @@ def _heuristic_review(request: StructuredChatRequest) -> dict:
     if nesting <= 1 and not has_sort:
         strengths.append("Single pass -- no obvious redundant work over the input.")
     if line_count and line_count <= 25:
-        strengths.append("Compact and readable at ~%d significant lines." % line_count)
+        strengths.append(f"Compact and readable at ~{line_count} significant lines.")
     if not strengths:
         strengths.append("Solution is complete and follows a recognisable pattern for this problem type.")
 
@@ -159,8 +161,8 @@ class CodeReviewInput(AgentInput):
 
 class CodeReviewOutput(AgentOutput):
     summary: str = ""
-    strengths: list[str] = []
-    improvements: list[str] = []
+    strengths: list[str] = Field(default_factory=list)
+    improvements: list[str] = Field(default_factory=list)
     time_complexity: str = ""
     space_complexity: str = ""
     complexity_explanation: str = ""

@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
 
-UTC = timezone.utc
-
 from fastapi import APIRouter, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -9,6 +7,8 @@ from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.core.redis_client import get_redis
 from app.graphrag.neo4j_client import is_graph_available
+
+UTC = timezone.utc
 
 router = APIRouter(tags=["health"])
 

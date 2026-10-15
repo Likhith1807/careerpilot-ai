@@ -82,8 +82,6 @@ def _split_bullets(text: str) -> list[str]:
 
 def _grade_bullet(section_type: str, bullet: str) -> BulletGrade:
     lower = bullet.lower()
-    first_words = " ".join(lower.split()[:4])
-
     vague_hit = next((p for p in _VAGUE_STARTERS if lower.startswith(p)), None)
     first_word = lower.split()[0].strip(".,;:") if lower.split() else ""
     has_action_verb = vague_hit is None and first_word in _STRONG_VERBS

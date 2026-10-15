@@ -20,7 +20,11 @@ from app.schemas.resume import (
     SelfConsistencyFlagOut,
 )
 from app.services.recruiter_card_service import build_recruiter_card
-from app.services.resume_analysis_service import check_self_consistency, grade_bullets, score_parseability
+from app.services.resume_analysis_service import (
+    check_self_consistency,
+    grade_bullets,
+    score_parseability,
+)
 from app.services.resume_rewrite_service import suggest_rewrites_for_gap
 from app.services.resume_service import (
     activate_resume,

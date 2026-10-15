@@ -19,6 +19,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from statistics import mean
+from typing import Any
 
 from sqlalchemy.orm import Session
 
@@ -32,7 +33,7 @@ from app.models.evaluation import EvaluationResult, EvaluationRun
 EFFICIENCY_FRONTIER_VERSION = "efficiency-frontier-v1"
 _MIN_SAMPLE_FOR_NON_PRELIMINARY = 30
 
-_CASES = [
+_CASES: list[dict[str, Any]] = [
     {
         "case_id": "strong-index-tradeoffs",
         "question_prompt": "Explain the tradeoffs of adding a database index.",

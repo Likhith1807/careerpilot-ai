@@ -2,6 +2,7 @@
 evidence-based readiness scoring (the same weighting as JD matching), the
 5-job tracked-list cap, and the Job Gap Simulator's honesty."""
 
+import pytest
 from sqlalchemy import select
 
 from app.core.errors import ConflictError, NotFoundError
@@ -10,8 +11,6 @@ from app.models.skill import EVIDENCE_TYPE_RESUME, Skill, SkillEvidence
 from app.models.student import StudentProfile
 from app.services import job_catalog_service
 from app.services.auth_service import register_student
-
-import pytest
 
 
 def _make_profile(db_session, email="jobmatch@example.com") -> StudentProfile:

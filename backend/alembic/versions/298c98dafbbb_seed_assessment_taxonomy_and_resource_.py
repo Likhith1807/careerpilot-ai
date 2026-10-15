@@ -7,23 +7,29 @@ Create Date: 2026-08-04 17:18:36.154607
 """
 import sys
 import uuid
+from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Sequence, Union
 
 import sqlalchemy as sa
-from alembic import op
 
+from alembic import op
 from app.core.types import GUID, JSONBType
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from app.seed.assessment_taxonomy import CONCEPT_DEPENDENCIES, CONCEPTS, DOMAINS, QUESTIONS, RESOURCES  # noqa: E402
+from app.seed.assessment_taxonomy import (
+    CONCEPT_DEPENDENCIES,
+    CONCEPTS,
+    DOMAINS,
+    QUESTIONS,
+    RESOURCES,
+)
 
 # revision identifiers, used by Alembic.
 revision: str = '298c98dafbbb'
-down_revision: Union[str, Sequence[str], None] = '2d1305695e6c'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = '2d1305695e6c'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def _now():

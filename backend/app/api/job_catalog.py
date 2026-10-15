@@ -24,6 +24,7 @@ from app.schemas.live_jobs import (
     SkillMatchOut,
     TrackLiveJobRequest,
 )
+from app.schemas.skill import SkillOut
 from app.services import job_catalog_service, job_roadmap_service, live_jobs_service
 from app.services.job_catalog_service import ListingMatch
 
@@ -33,9 +34,9 @@ router = APIRouter(prefix="/job-catalog", tags=["job-catalog"])
 def _match_out(match: ListingMatch, tracked_listing_ids: set[uuid.UUID]) -> JobListingMatchOut:
     return JobListingMatchOut(
         listing=CompanyJobListingOut.model_validate(match.listing),
-        matched_skills=match.matched_skills,
-        partial_skills=match.partial_skills,
-        missing_skills=match.missing_skills,
+        matched_skills=[SkillOut.model_validate(s) for s in match.matched_skills],
+        partial_skills=[SkillOut.model_validate(s) for s in match.partial_skills],
+        missing_skills=[SkillOut.model_validate(s) for s in match.missing_skills],
         readiness=match.readiness,
         is_tracked=match.listing.id in tracked_listing_ids,
     )

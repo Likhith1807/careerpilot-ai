@@ -9,13 +9,12 @@ heuristic planning assumption (Constitution rule 4).
 """
 
 import math
+import re
 import uuid
 from dataclasses import dataclass, field
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-
-import re
 
 from app.core.errors import ConflictError, NotFoundError
 from app.models.job_catalog import (
@@ -245,7 +244,7 @@ _SKILL_DOMAIN = {
 def _lpa_from_comp_note(note: str | None) -> float:
     if not note:
         return 0.0
-    lpa = re.search(r"([\d.]+)\s*LPA", note, re.I)
+    lpa = re.search(r"([\d.]+)\s*LPA", note, re.IGNORECASE)
     if lpa:
         try:
             return round(float(lpa.group(1)), 2)
@@ -394,9 +393,11 @@ def simulate_job_gap(
 
     assumptions = [
         f"Assumes {weekly_commitment_hours:.0f} focused hours/week -- adjust this to fit your real schedule.",
-        f"Missing skills are estimated at {_HOURS_MISSING_SKILL}h to build real evidence from scratch; "
-        f"partially-supported skills at {_HOURS_PARTIAL_SKILL}h to strengthen further. This is a heuristic "
-        "planning estimate, not a measured learning rate or a guarantee.",
+        (
+            f"Missing skills are estimated at {_HOURS_MISSING_SKILL}h to build real evidence from scratch; "
+            f"partially-supported skills at {_HOURS_PARTIAL_SKILL}h to strengthen further. This is a heuristic "
+            "planning estimate, not a measured learning rate or a guarantee."
+        ),
     ]
     if not items:
         assumptions.append("Every required skill for this role already has strong resume evidence on file.")

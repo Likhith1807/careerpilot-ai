@@ -14,9 +14,8 @@ from dataclasses import dataclass
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.base import utcnow
-
 from app.models.audit import AuditEvent, DecisionTrace
+from app.models.base import utcnow
 from app.models.career_twin import (
     ALL_COMPONENTS,
     COMPONENT_ASSESSMENT,

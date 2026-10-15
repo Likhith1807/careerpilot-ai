@@ -31,7 +31,6 @@ from app.models.assessment import (
     AssessmentAttempt,
     AssessmentDomain,
     Concept,
-    Question,
     QuestionResponse,
 )
 from app.models.student import StudentProfile

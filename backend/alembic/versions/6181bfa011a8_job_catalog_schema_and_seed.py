@@ -15,24 +15,24 @@ Create Date: 2026-08-06 03:40:45.176417
 """
 import sys
 import uuid
+from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Sequence, Union
 
 import sqlalchemy as sa
-from alembic import op
 
 import app.core.types
+from alembic import op
 from app.core.types import GUID, JSONBType
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from app.seed.company_job_catalog import LISTINGS  # noqa: E402
+from app.seed.company_job_catalog import LISTINGS
 
 # revision identifiers, used by Alembic.
 revision: str = '6181bfa011a8'
-down_revision: Union[str, Sequence[str], None] = '190e57633512'
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = '190e57633512'
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def _now():

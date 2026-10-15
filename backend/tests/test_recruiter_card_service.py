@@ -9,9 +9,9 @@ from docx import Document
 from sqlalchemy import select
 
 from app.models.student import StudentProfile
-from app.services import recruiter_card_service, role_dashboard_service
+from app.services import recruiter_card_service
 from app.services.auth_service import register_student
-from app.services.resume_service import get_latest_resume, process_resume
+from app.services.resume_service import process_resume
 
 DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 

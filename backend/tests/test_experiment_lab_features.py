@@ -3,7 +3,7 @@ graph-aware prerequisite ordering, the diminishing-returns curve,
 deadline/weekly-budget calendar shaping, opportunity-cost framing,
 sensitivity analysis, and the prediction-accuracy bridge to Research Lab."""
 
-from datetime import date, timedelta
+from datetime import date
 
 from sqlalchemy import select
 
@@ -13,8 +13,20 @@ from app.models.skill import EVIDENCE_TYPE_INTERVIEW, Skill, SkillEvidence
 from app.models.student import StudentProfile
 from app.models.user import Role, User, UserRole
 from app.services import experiment_service
-from app.simulation.engine import ComponentChange, compute_opportunity_cost_notes, compute_sensitivity, simulate_scenario, AllocationInput
-from app.simulation.inverse import AllocationPlanItem, build_calendar_plan, marginal_gain_curve, reorder_by_prerequisites, solve_for_target
+from app.simulation.engine import (
+    AllocationInput,
+    ComponentChange,
+    compute_opportunity_cost_notes,
+    compute_sensitivity,
+    simulate_scenario,
+)
+from app.simulation.inverse import (
+    AllocationPlanItem,
+    build_calendar_plan,
+    marginal_gain_curve,
+    reorder_by_prerequisites,
+    solve_for_target,
+)
 
 
 def _make_student(db_session, email: str) -> StudentProfile:

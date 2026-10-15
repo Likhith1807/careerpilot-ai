@@ -17,7 +17,12 @@ from app.graphrag.schemas import (
     RootCauseResult,
     StudentGraphOverviewOut,
 )
-from app.graphrag.service import analyze_root_cause, get_concept_insight, get_concept_neighborhood, get_student_graph_overview
+from app.graphrag.service import (
+    analyze_root_cause,
+    get_concept_insight,
+    get_concept_neighborhood,
+    get_student_graph_overview,
+)
 from app.models.assessment import Concept, Question
 from app.models.student import StudentProfile
 from app.services import assessment_service

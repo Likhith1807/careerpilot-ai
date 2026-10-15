@@ -1,7 +1,7 @@
 """phase1 initial schema
 
 Revision ID: 788d1325f003
-Revises: 
+Revises:
 Create Date: 2026-08-04 10:41:49.772214
 
 """
