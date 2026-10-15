@@ -324,3 +324,4 @@ CareerPilot AI was architected and developed by:
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
