@@ -32,7 +32,7 @@ confidence because it never calls a model for score-producing paths at
 all: `career_twin/scoring.py`, the CARE routing policy, and the
 `sim-v1` simulation engine are pure versioned formulas. A live LLM can be
 configured to improve prose quality, but it's never the sole source of a
-stored score — see Constitution rule 4 in `CLAUDE.md` and
+stored score — see Constitution rule 4 and
 `docs/implementation/CAREER_TWIN_SCORING.md`."
 
 ---

@@ -58,7 +58,7 @@ authorization layer only (no dashboards yet).
 
 ## Sequencing
 
-1. CLAUDE.md constitution.
+1. Engineering constitution.
 2. Backend core (config, DB session, logging, error envelope, health/ready).
 3. Models + Alembic migration.
 4. Auth + RBAC.

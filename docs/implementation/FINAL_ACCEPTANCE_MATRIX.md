@@ -53,7 +53,7 @@ phase. **PARTIAL** — real, working, narrower than the original ask, scope
 gap stated explicitly. **DEFERRED** — genuinely not done; no code claims
 otherwise anywhere in the repo or docs.
 
-## Constitution compliance (CLAUDE.md, 16 rules)
+## Constitution compliance (Engineering Constitution, 16 rules)
 
 | # | Rule | Status | Evidence |
 |---|---|---|---|

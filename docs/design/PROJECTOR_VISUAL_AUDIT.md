@@ -1,6 +1,6 @@
 # Projector Visual Audit
 
-Status tracker for the CLAUDE.md "projector-first visual validation"
+Status tracker for the project "projector-first visual validation"
 requirement (1920×1080, 1366×768, 1512×795, 100%/125% zoom, dark/light
 theme, fullscreen Competition Mode). Updated honestly at each pass — see
 inline notes for what's real vs. still outstanding.

@@ -298,7 +298,7 @@ a one-click sign-in.
   Phase 1.
 - Two Next.js Turbopack dev warnings unrelated to app code were resolved
   (`agentRules: false` in `next.config.ts` to stop it from regenerating its
-  own `AGENTS.md`/`CLAUDE.md` in `frontend/` on every `next dev`).
+  own `AGENTS.md` in `frontend/` on every `next dev`).
 
 ## 10. Acceptance criteria checklist
 

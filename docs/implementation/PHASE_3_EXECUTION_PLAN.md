@@ -28,7 +28,7 @@ one. No repair work is needed before Phase 3 begins.
 
 ## 1. What Phase 3 actually requires
 
-The Phase 3 brief (`CLAUDE.md` project prompt) specifies a very large
+The Phase 3 brief (project specification) specifies a very large
 surface: a full voice-enabled multi-agent Interview Arena, a deterministic
 Career Experiment Lab with a simulation engine, a Research Benchmark Lab
 with six comparison studies plus ablations plus calibration analysis, a

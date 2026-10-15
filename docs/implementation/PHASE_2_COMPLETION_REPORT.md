@@ -359,7 +359,7 @@ the SQL assessment live and watch the loop close in real time.
 
 Works fully without any API key: the fake provider drives every agent
 deterministically. Set `PRIMARY_LLM_API_KEY` to route resume-insight/
-career-coach/assessment-grading synthesis through live Claude instead — no
+career-coach/assessment-grading synthesis through a live LLM provider instead — no
 code change required.
 
 ## 15. Known non-blocking limitations
